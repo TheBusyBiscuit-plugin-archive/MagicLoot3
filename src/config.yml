@@ -1,0 +1,46 @@
+options:
+  auto-update: true
+  log: true
+chances:
+  ruin: 30
+  mobs: 40
+items:
+  min: 2
+  max: 10
+enchantments:
+  min: 2
+  max: 5
+potions:
+  min: 1
+  max: 3
+effects:
+  min: 0
+  max: 3
+slimefun:
+  min: 2
+  max: 6
+costs:
+  RANDOM: 10
+  COMMON: 2
+  UNCOMMON: 5
+  RARE: 10
+  EPIC: 25
+  LEGENDARY: 50
+enable:
+  TREASURE: true
+  TOOL: true
+  SLIMEFUN: true
+  BOOK: true
+  POTION: true
+  UNANALIZED: true
+world-blacklist:
+- world_nether
+spawners:
+- ZOMBIE
+- SPIDER
+- CAVE_SPIDER
+- BLAZE
+- SKELETON
+- ENDERMAN
+- PIG_ZOMBIE
+- WITCH

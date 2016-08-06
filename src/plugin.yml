@@ -1,0 +1,8 @@
+name: MagicLoot
+version: 3.0
+author: mrCookieSlime
+website: http://dev.bukkit.org/profiles/mrCookieSlime/bukkit-plugins/
+
+main: me.mrCookieSlime.MagicLoot.main
+
+softdepend: [Slimefun, CS-CoreLib, WorldEdit, EmeraldEnchants]
