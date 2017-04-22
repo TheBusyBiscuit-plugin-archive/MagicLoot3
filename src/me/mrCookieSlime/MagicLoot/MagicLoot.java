@@ -24,11 +24,11 @@ import org.bukkit.potion.PotionEffectType;
 
 public class MagicLoot {
 	
-	public static List<String> prefixes = new ArrayList<String>();
-	public static List<String> suffixes = new ArrayList<String>();
-	public static List<String> colors = new ArrayList<String>();
-	public static List<String> effects = new ArrayList<String>();
-	public static List<EntityType> mobs = new ArrayList<EntityType>();
+    public static List<String> prefixes = new ArrayList<String>();
+    public static List<String> suffixes = new ArrayList<String>();
+    public static List<String> colors = new ArrayList<String>();
+    public static List<String> effects = new ArrayList<String>();
+    public static List<EntityType> mobs = new ArrayList<EntityType>();
 	
 	public static void registerHandler(RuinHandler handler) {
 		main.handlers.add(handler);
@@ -51,9 +51,9 @@ public class MagicLoot {
 		default:
 			return null;
 		}
-	}
+    }
 
-	public static void setupConfigs() {
+    public static void setupConfigs() {
 		loadNames();
 		
 		getConfig(ConfigType.ITEMS).setDefaultValue("treasure.DIAMOND", true);
@@ -148,105 +148,105 @@ public class MagicLoot {
 			}
 	    }
 	}
-
-	private static void loadNames() {
-		prefixes.add("Precious");
-		prefixes.add("Mighty");
-		prefixes.add("Fabulous");
-		prefixes.add("Devil's");
-		prefixes.add("Herobrine's");
-		prefixes.add("Hellish");
-		prefixes.add("Enchanted");
-		prefixes.add("Magical");
-		prefixes.add("Strange");
-		prefixes.add("Fancy");
-		prefixes.add("Emerald");
-		prefixes.add("Ruby");
-		prefixes.add("Sapphire");
-		prefixes.add("Golden");
-		prefixes.add("Asian");
-		prefixes.add("Enhanced");
-		prefixes.add("Advanced");
-		prefixes.add("Awkward");
-		prefixes.add("Pointless");
-		prefixes.add("Brave");
-		prefixes.add("Awesome");
-		prefixes.add("Holy");
-		prefixes.add("Unholy");
-		prefixes.add("Hallowed");
-		prefixes.add("Dark");
-		prefixes.add("Timelord");
-		prefixes.add("Master");
-		prefixes.add("Gallifreyan");
-		prefixes.add("Helpful");
-		prefixes.add("Trusty");
-		prefixes.add("Faithful");
-		prefixes.add("Mysterious");
-		prefixes.add("Legendary");
-		prefixes.add("Amazing");
-		prefixes.add("Old");
-		prefixes.add("Unbelievable");
-		prefixes.add("Godly");
-		prefixes.add("Frozen");
-		prefixes.add("Awakened");
-		prefixes.add("Deadly");
-		prefixes.add("Cursed");
-		prefixes.add("Elemental");
-		prefixes.add("Sharp");
-		prefixes.add("Travelling");
-		prefixes.add("Doomed");
-		prefixes.add("Ghostly");
-		prefixes.add("Dirty");
-		prefixes.add("Faithful");
-		prefixes.add("Bad");
-		prefixes.add("Great");
-		prefixes.add("Crying");
-		
-		suffixes.add("Tool");
-		suffixes.add("Wizard");
-		suffixes.add("Magician");
-		suffixes.add("Kindness");
-		suffixes.add("Spirit");
-		suffixes.add("Darkness");
-		suffixes.add("Lion");
-		suffixes.add("King");
-		suffixes.add("Dragon");
-		suffixes.add("Heaven");
-		suffixes.add("Swiftness");
-		suffixes.add("Tool");
-		suffixes.add("Absorption");
-		suffixes.add("Spell");
-		suffixes.add("Lump");
-		suffixes.add("Glory");
-		suffixes.add("Demon");
-		suffixes.add("Fury");
-		suffixes.add("Challenge");
-		suffixes.add("Wolf");
-		suffixes.add("Ghost");
-		suffixes.add("Fire");
-		suffixes.add("Night");
-		suffixes.add("Day");
-		suffixes.add("Rose");
-		suffixes.add("Crime");
-		suffixes.add("Cry");
-		suffixes.add("Screwdriver");
-		suffixes.add("Intelligence");
-		suffixes.add("Madness");
-		suffixes.add("Skill");
-		suffixes.add("Skull");
-		suffixes.add("Sun");
-		suffixes.add("Monster");
-		suffixes.add("Treasure");
-		
-		colors.add("&9");
-		colors.add("&a");
-		colors.add("&6");
-		colors.add("&c");
-		colors.add("&b");
-		colors.add("&e");
-	}
 	
-	public static void loadSettings() {
+    private static void loadNames() {
+        prefixes.add("Precious");
+        prefixes.add("Mighty");
+        prefixes.add("Fabulous");
+        prefixes.add("Devil's");
+        prefixes.add("Herobrine's");
+        prefixes.add("Hellish");
+        prefixes.add("Enchanted");
+        prefixes.add("Magical");
+        prefixes.add("Strange");
+        prefixes.add("Fancy");
+        prefixes.add("Emerald");
+        prefixes.add("Ruby");
+        prefixes.add("Sapphire");
+        prefixes.add("Golden");
+        prefixes.add("Asian");
+        prefixes.add("Enhanced");
+        prefixes.add("Advanced");
+        prefixes.add("Awkward");
+        prefixes.add("Pointless");
+        prefixes.add("Brave");
+        prefixes.add("Awesome");
+        prefixes.add("Holy");
+        prefixes.add("Unholy");
+        prefixes.add("Hallowed");
+        prefixes.add("Dark");
+        prefixes.add("Timelord");
+        prefixes.add("Master");
+        prefixes.add("Gallifreyan");
+        prefixes.add("Helpful");
+        prefixes.add("Trusty");
+        prefixes.add("Faithful");
+        prefixes.add("Mysterious");
+        prefixes.add("Legendary");
+        prefixes.add("Amazing");
+        prefixes.add("Old");
+        prefixes.add("Unbelievable");
+        prefixes.add("Godly");
+        prefixes.add("Frozen");
+        prefixes.add("Awakened");
+        prefixes.add("Deadly");
+        prefixes.add("Cursed");
+        prefixes.add("Elemental");
+        prefixes.add("Sharp");
+        prefixes.add("Travelling");
+        prefixes.add("Doomed");
+        prefixes.add("Ghostly");
+        prefixes.add("Dirty");
+        prefixes.add("Faithful");
+        prefixes.add("Bad");
+        prefixes.add("Great");
+        prefixes.add("Crying");
+        
+        suffixes.add("Tool");
+        suffixes.add("Wizard");
+        suffixes.add("Magician");
+        suffixes.add("Kindness");
+        suffixes.add("Spirit");
+        suffixes.add("Darkness");
+        suffixes.add("Lion");
+        suffixes.add("King");
+        suffixes.add("Dragon");
+        suffixes.add("Heaven");
+        suffixes.add("Swiftness");
+        suffixes.add("Tool");
+        suffixes.add("Absorption");
+        suffixes.add("Spell");
+        suffixes.add("Lump");
+        suffixes.add("Glory");
+        suffixes.add("Demon");
+        suffixes.add("Fury");
+        suffixes.add("Challenge");
+        suffixes.add("Wolf");
+        suffixes.add("Ghost");
+        suffixes.add("Fire");
+        suffixes.add("Night");
+        suffixes.add("Day");
+        suffixes.add("Rose");
+        suffixes.add("Crime");
+        suffixes.add("Cry");
+        suffixes.add("Screwdriver");
+        suffixes.add("Intelligence");
+        suffixes.add("Madness");
+        suffixes.add("Skill");
+        suffixes.add("Skull");
+        suffixes.add("Sun");
+        suffixes.add("Monster");
+        suffixes.add("Treasure");
+        
+        colors.add("&9");
+        colors.add("&a");
+        colors.add("&6");
+        colors.add("&c");
+        colors.add("&b");
+        colors.add("&e");
+    }
+
+    public static void loadSettings() {
 		for (Enchantment e: Enchantment.values()) {
 			if (getMaxLevel(e) > 0) ItemManager.ENCHANTMENTS.add(e);
 		}
@@ -265,16 +265,15 @@ public class MagicLoot {
 				}
 			}
 		}
-		ItemManager.PREFIX = getConfig(ConfigType.NAMES).getStringList("prefixes");
-		ItemManager.SUFFIX = getConfig(ConfigType.NAMES).getStringList("suffixes");
-		ItemManager.COLOR = getConfig(ConfigType.NAMES).getStringList("colors");
-		
+        ItemManager.PREFIX = MagicLoot.getConfig(ConfigType.NAMES).getStringList("prefixes");
+        ItemManager.SUFFIX = MagicLoot.getConfig(ConfigType.NAMES).getStringList("suffixes");
+        ItemManager.COLOR = MagicLoot.getConfig(ConfigType.NAMES).getStringList("colors");
+        
 		for (PotionEffectType e: PotionEffectType.values()) {
 			if (e != null) {
 				if (getMaxLevel(StringUtils.format(e.getName())) > 0) ItemManager.EFFECTS.add(StringUtils.format(e.getName()));
 			}
 		}
-		
 		for (Material m: Material.values()) {
 			if (getConfig(ConfigType.ITEMS).contains("treasure." + m.toString())) {
 				if (getConfig(ConfigType.ITEMS).getBoolean("treasure." + m.toString())) ItemManager.TREASURE.add(m);
@@ -293,8 +292,8 @@ public class MagicLoot {
 				if (main.cfg.getBoolean("enable." + type.toString())) ItemManager.types.add(type);
 			}
 		}
-	}
-	
+    }
+
 	public static void loadRuin(String name) {
 		InputStream stream = MagicLoot.class.getResourceAsStream("schematics/" + name + ".schematic");
 	    OutputStream out = null;
@@ -315,7 +314,7 @@ public class MagicLoot {
 			}
 	    }
 	}
-
+	
 	public static int getMaxLevel(Enchantment e) {
 		return getConfig(ConfigType.ENCHANTMENTS).getInt(e.getName() + ".max-level");
 	}
@@ -335,5 +334,5 @@ public class MagicLoot {
 	public static boolean isSlimefunItemEnabled(String item) {
 		return getConfig(ConfigType.ITEMS).getBoolean("Slimefun-Item." + item);
 	}
-
+	
 }
