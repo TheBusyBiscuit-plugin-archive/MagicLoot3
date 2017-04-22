@@ -32,20 +32,20 @@ import org.bukkit.potion.PotionEffectType;
 
 public class ItemManager {
 	
-    public static List<Enchantment> ENCHANTMENTS = new ArrayList<Enchantment>();
+	public static List<Enchantment> ENCHANTMENTS = new ArrayList<Enchantment>();
 	public static List<CustomEnchantment> EEENCHANTMENTS = new ArrayList<CustomEnchantment>();
-    public static List<PotionEffectType> POTIONEFFECTS = new ArrayList<PotionEffectType>();
-    public static List<String> PREFIX = new ArrayList<String>();
-    public static List<String> SUFFIX = new ArrayList<String>();
-    public static List<String> COLOR = new ArrayList<String>();
-    public static List<String> EFFECTS = new ArrayList<String>();
-    public static List<Material> TOOLS = new ArrayList<Material>();
-    public static List<Material> TREASURE = new ArrayList<Material>();
-    public static List<ItemStack> SLIMEFUN = new ArrayList<ItemStack>();
-    
-    public static List<LootType> types = new ArrayList<LootType>();
-    public static Map<String, PotionEffectType> potion = new HashMap<String, PotionEffectType>();
-
+	public static List<PotionEffectType> POTIONEFFECTS = new ArrayList<PotionEffectType>();
+	public static List<String> PREFIX = new ArrayList<String>();
+	public static List<String> SUFFIX = new ArrayList<String>();
+	public static List<String> COLOR = new ArrayList<String>();
+	public static List<String> EFFECTS = new ArrayList<String>();
+	public static List<Material> TOOLS = new ArrayList<Material>();
+	public static List<Material> TREASURE = new ArrayList<Material>();
+	public static List<ItemStack> SLIMEFUN = new ArrayList<ItemStack>();
+	
+	public static List<LootType> types = new ArrayList<LootType>();
+	public static Map<String, PotionEffectType> potion = new HashMap<String, PotionEffectType>();
+	
 	public static final int min_items = main.cfg.getInt("items.min");
 	public static final int max_items = main.cfg.getInt("items.max");
 	public static final int min_enchantments = main.cfg.getInt("enchantments.min");
@@ -62,10 +62,10 @@ public class ItemManager {
 	public static ItemStack createItem(LootType type) {
 		if (type == LootType.RANDOM) type = types.get(CSCoreLib.randomizer().nextInt(types.size()));
 		if (type == LootType.SLIMEFUN && !Bukkit.getPluginManager().isPluginEnabled("Slimefun")) type = LootType.TREASURE;
-
+		
 		ItemStack item = new ItemStack(Material.AIR);
 		try {
-			switch (type) {
+			switch(type) {
 			case BOOK: {
 				item.setType(Material.ENCHANTED_BOOK);
 				String name = String.valueOf(COLOR.get(CSCoreLib.randomizer().nextInt(COLOR.size()))) + PREFIX.get(CSCoreLib.randomizer().nextInt(PREFIX.size())) + " " + SUFFIX.get(CSCoreLib.randomizer().nextInt(SUFFIX.size()));
@@ -106,7 +106,7 @@ public class ItemManager {
 					item.setType(TOOLS.get(CSCoreLib.randomizer().nextInt(TOOLS.size())));
 					if (item.getType().getMaxDurability() == 0) break;
 					item = applyTier(item, LootTier.getRandom());
-
+					
 					item.setDurability((short) (CSCoreLib.randomizer().nextInt(item.getType().getMaxDurability() / 4) * 3));
 				}
 				break;
@@ -125,7 +125,7 @@ public class ItemManager {
 				}
 				item.setType(TOOLS.get(CSCoreLib.randomizer().nextInt(TOOLS.size())));
 				ItemMeta im = item.getItemMeta();
-				im.setDisplayName(ChatColor.translateAlternateColorCodes((char)'&', (String)"&7&kAnalize meh"));
+				im.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&7&kMEH WANNA BE EXAMINED"));
 				List<String> lore = new ArrayList<String>();
 				lore.add("");
 				lore.add(ChatColor.translateAlternateColorCodes((char)'&', (String)"&7&oUnanalized"));
@@ -142,7 +142,7 @@ public class ItemManager {
 		}
 		return item;
 	}
-
+	
 	public static ItemStack applyTier(ItemStack item, LootTier tier) {
 		String name = COLOR.get(CSCoreLib.randomizer().nextInt(COLOR.size())) + PREFIX.get(CSCoreLib.randomizer().nextInt(PREFIX.size())) + " " + SUFFIX.get(CSCoreLib.randomizer().nextInt(SUFFIX.size()));
 		
@@ -208,9 +208,9 @@ public class ItemManager {
 		}
 		return item;
 	}
-	
-    public static void fillChest(Block block) {
-    	int min, max;
+
+	public static void fillChest(Block block) {
+		int min, max;
 		min = main.cfg.getInt("items.min");
 		max = main.cfg.getInt("items.max");
 		if (block.getState() instanceof Chest) {
@@ -220,8 +220,8 @@ public class ItemManager {
 				inv.setItem(CSCoreLib.randomizer().nextInt(inv.getSize()), createItem(LootType.RANDOM));
 			}
 		}
-    }
-
+	}
+	
 	public static void equipEntity(Entity n) {
 		if (!(n instanceof LivingEntity)) return;
 		LivingEntity entity = (LivingEntity) n;
@@ -265,4 +265,3 @@ public class ItemManager {
 	}
 
 }
-

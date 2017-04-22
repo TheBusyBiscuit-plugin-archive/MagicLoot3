@@ -11,7 +11,6 @@ import me.mrCookieSlime.CSCoreLibPlugin.events.ItemUseEvent;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.CustomItem;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Inventory.Item.MenuItem;
 import me.mrCookieSlime.CSCoreLibSetup.CSCoreLibLoader;
-import me.mrCookieSlime.Slimefun.Lists.Categories;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Lists.SlimefunItems;
 import me.mrCookieSlime.Slimefun.Objects.Category;
@@ -26,57 +25,56 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.MaterialData;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class main extends JavaPlugin {
 	
-    public static Config config_items;
-    public static Config config_names;
-    public static Config config_ench;
-    public static Config config_potions;
-    public static Config config_effects;
-    public static Config cfg;
+	public static Config config_items;
+	public static Config config_names;
+	public static Config config_ench;
+	public static Config config_potions;
+	public static Config config_effects;
+	public static Config cfg;
 	public static Config tiers;
     public static ItemStack BOOK;
-    
+	
 	public static List<RuinHandler> handlers = new ArrayList<RuinHandler>();
-
-    public void onEnable() {
-        CSCoreLibLoader loader = new CSCoreLibLoader((Plugin)this);
-        
-        if (loader.load()) {
-            PluginUtils utils = new PluginUtils((Plugin)this);
-            utils.setupConfig();
-            utils.setupMetrics();
-            utils.setupUpdater(74010, this.getFile());
-            
-            config_items = new Config(new File("plugins/MagicLoot/Items.yml"));
-            config_names = new Config(new File("plugins/MagicLoot/Names.yml"));
-            config_ench = new Config(new File("plugins/MagicLoot/Enchantments.yml"));
-            config_potions = new Config(new File("plugins/MagicLoot/Potions.yml"));
-            config_effects = new Config(new File("plugins/MagicLoot/Effects.yml"));
-            cfg = new Config(new File("plugins/MagicLoot/config.yml"));
-            BOOK = new CustomItem(Material.ENCHANTED_BOOK, "&7Tome of Analizing", 0, new String[]{"", "&eRight Click &7to analize Items"});
-			tiers = new Config(new File("plugins/MagicLoot/loot_tiers.yml"));
-            MagicLoot.setupConfigs();
-            try {
-                RuinBuilder.loadRuins();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-            
-            ItemManager.emeraldenchants = Bukkit.getPluginManager().isPluginEnabled("EmeraldEnchants");
+	
+	@Override
+	public void onEnable() {
+		CSCoreLibLoader loader = new CSCoreLibLoader(this);
+		
+		if (loader.load()) {
+			PluginUtils utils = new PluginUtils(this);
+			utils.setupConfig();
+			utils.setupMetrics();
+			utils.setupUpdater(74010, getFile());
 			
-            if (Bukkit.getPluginManager().isPluginEnabled("Slimefun")) {
-                
+			config_items = new Config(new File("plugins/MagicLoot/Items.yml"));
+			config_names = new Config(new File("plugins/MagicLoot/Names.yml"));
+			config_ench = new Config(new File("plugins/MagicLoot/Enchantments.yml"));
+			config_potions = new Config(new File("plugins/MagicLoot/Potions.yml"));
+			config_effects = new Config(new File("plugins/MagicLoot/Effects.yml"));
+			cfg = new Config(new File("plugins/MagicLoot/config.yml"));
+			tiers = new Config(new File("plugins/MagicLoot/loot_tiers.yml"));
+            BOOK = new CustomItem(Material.ENCHANTED_BOOK, "&7Tome of Analizing", 0, new String[]{"", "&eRight Click &7to analize Items"});
+			
+			MagicLoot.setupConfigs();
+			
+			try {
+				RuinBuilder.loadRuins();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			ItemManager.emeraldenchants = Bukkit.getPluginManager().isPluginEnabled("EmeraldEnchants");
+			
+			if (Bukkit.getPluginManager().isPluginEnabled("Slimefun")) {
 				Category category = new Category(new MenuItem(Material.BOOKSHELF, "§5MagicLoot", 0, "open"));
-				
 				new SlimefunItem(category, new CustomItem(new MaterialData(Material.ENCHANTED_BOOK), "§dTome of Analizing", "", "§eRight Click §rto analize Items", ""), "TOMB_OF_ANALIZING", RecipeType.MOB_DROP,
 				new ItemStack[] {null, null, null, null, new CustomItem(Material.MONSTER_EGG, "&a&oWitch", 99), null, null, null, null})
 				.register();
-						
+				
 				new SlimefunItem(category, new CustomItem(new MaterialData(Material.BOOKSHELF), "§dLost Bookshelf", "", "§rScrambled Parts of an", "§rancient Library..."), "LOST_BOOKSHELF", RecipeType.ENHANCED_CRAFTING_TABLE,
 				new ItemStack[] {new ItemStack(Material.BOOKSHELF), null, new ItemStack(Material.BOOKSHELF), SlimefunItems.MAGIC_LUMP_3, SlimefunItems.MAGICAL_BOOK_COVER, SlimefunItems.MAGIC_LUMP_3, new ItemStack(Material.BOOKSHELF), null, new ItemStack(Material.BOOKSHELF)}, new CustomItem(new CustomItem(new MaterialData(Material.BOOKSHELF), "§dLost Bookshelf", "", "§rScrambled Parts of an", "§rancient Library..."), 2))
 				.register();
@@ -100,6 +98,7 @@ public class main extends JavaPlugin {
 					}
 				});
 			}
+			
 			final main plugin = this;
 			getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 				@Override
@@ -116,38 +115,39 @@ public class main extends JavaPlugin {
 					new MLListener(plugin);
 				}
 			}, 10);
-        }
-    }
-
-    public void onDisable() {
-        cfg = null;
-        config_effects = null;
-        config_ench = null;
-        config_items = null;
-        config_names = null;
-        config_potions = null;
-        BOOK = null;
+		}
+	}
+	
+	@Override
+	public void onDisable() {
+		cfg = null;
+		config_effects = null;
+		config_ench = null;
+		config_items = null;
+		config_names = null;
+		config_potions = null;
 		handlers = null;
+        BOOK = null;
 		
-        ItemManager.COLOR = null;
-        ItemManager.ENCHANTMENTS = null;
-        ItemManager.EFFECTS = null;
-        ItemManager.potion = null;
-        ItemManager.POTIONEFFECTS = null;
-        ItemManager.PREFIX = null;
-        ItemManager.SLIMEFUN = null;
-        ItemManager.SUFFIX = null;
-        ItemManager.TOOLS = null;
-        ItemManager.TREASURE = null;
-        ItemManager.types = null;
-        
-        MagicLoot.colors = null;
-        MagicLoot.effects = null;
-        MagicLoot.prefixes = null;
-        MagicLoot.suffixes = null;
-        MagicLoot.mobs = null;
-        
-        RuinBuilder.schematics = null;
-    }
+		ItemManager.COLOR = null;
+		ItemManager.ENCHANTMENTS = null;
+		ItemManager.EFFECTS = null;
+		ItemManager.potion = null;
+		ItemManager.POTIONEFFECTS = null;
+		ItemManager.PREFIX = null;
+		ItemManager.SLIMEFUN = null;
+		ItemManager.SUFFIX = null;
+		ItemManager.TOOLS = null;
+		ItemManager.TREASURE = null;
+		ItemManager.types = null;
+		
+		MagicLoot.colors = null;
+		MagicLoot.effects = null;
+		MagicLoot.prefixes = null;
+		MagicLoot.suffixes = null;
+		MagicLoot.mobs = null;
+		
+		RuinBuilder.schematics = null;
+	}
 
 }

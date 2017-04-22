@@ -4,16 +4,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+
 import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
 import me.mrCookieSlime.CSCoreLibPlugin.events.ItemUseEvent;
 import me.mrCookieSlime.CSCoreLibPlugin.general.Particles.FireworkShow;
-import me.mrCookieSlime.MagicLoot.ItemManager;
-import me.mrCookieSlime.MagicLoot.MagicLoot;
-import me.mrCookieSlime.MagicLoot.RuinBuilder;
-import me.mrCookieSlime.MagicLoot.main;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
-import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
@@ -27,59 +24,77 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 
-public class MLListener
-implements Listener {
-    private final List<EntityDamageEvent.DamageCause> causes = Arrays.asList(new EntityDamageEvent.DamageCause[]{EntityDamageEvent.DamageCause.BLOCK_EXPLOSION, EntityDamageEvent.DamageCause.CONTACT, EntityDamageEvent.DamageCause.ENTITY_ATTACK, EntityDamageEvent.DamageCause.ENTITY_EXPLOSION, EntityDamageEvent.DamageCause.FALL, EntityDamageEvent.DamageCause.FALLING_BLOCK, EntityDamageEvent.DamageCause.FIRE, EntityDamageEvent.DamageCause.LAVA, EntityDamageEvent.DamageCause.MAGIC, EntityDamageEvent.DamageCause.THORNS});
-
-    public MLListener(main plugin) {
-        plugin.getServer().getPluginManager().registerEvents((Listener)this, (Plugin)plugin);
-    }
-
-    @EventHandler
-    public void onRuinGenerate(ChunkPopulateEvent e) {
-        if (!main.cfg.getStringList("world-blacklist").contains(e.getWorld().getName()) && CSCoreLib.randomizer().nextInt(100) < main.cfg.getInt("chances.ruin")) {
-            int x = e.getChunk().getX() * 16 + CSCoreLib.randomizer().nextInt(16);
-            int z = e.getChunk().getZ() * 16 + CSCoreLib.randomizer().nextInt(16);
-            boolean flat = false;
-            int y = e.getWorld().getMaxHeight();
-            while (y > 30) {
-                Block current = e.getWorld().getBlockAt(x, y, z);
-                if (!current.getType().isSolid()) {
-                    flat = true;
-                    int i = 0;
-                    while (i < 6) {
-                        int j = 0;
-                        while (j < 6) {
-                            int k = 0;
-                            while (k < 8) {
-                                if (current.getRelative(i, k, j).getType().isSolid() || current.getRelative(i, k, j).getType().toString().contains("LEAVES") || !current.getRelative(i, -1, j).getType().isSolid()) {
-                                    flat = false;
-                                }
-                                ++k;
-                            }
-                            ++j;
-                        }
-                        ++i;
-                    }
-                    if (flat) {
-                        RuinBuilder.buildRuin(new Location(e.getWorld(), (double)x, (double)y, (double)z));
-                        break;
-                    }
-                }
-                --y;
-            }
-        }
-    }
-
-    @EventHandler(priority=EventPriority.MONITOR, ignoreCancelled=true)
-    public void onDamage(EntityDamageEvent e) {
+public class MLListener implements Listener {
+	
+	private final List<DamageCause> causes = Arrays.asList(
+			DamageCause.BLOCK_EXPLOSION, 
+			DamageCause.CONTACT, 
+			DamageCause.ENTITY_ATTACK, 
+			DamageCause.ENTITY_EXPLOSION,
+			DamageCause.FALL,
+			DamageCause.FALLING_BLOCK,
+			DamageCause.FIRE,
+			DamageCause.LAVA,
+			DamageCause.MAGIC,
+			DamageCause.THORNS
+	);
+	
+	public MLListener(main plugin) {
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+	
+	@EventHandler
+	public void onRuinGenerate(ChunkPopulateEvent e) {
+		if (!main.cfg.getStringList("world-blacklist").contains(e.getWorld().getName())) {
+			if (CSCoreLib.randomizer().nextInt(100) < main.cfg.getInt("chances.ruin")) {
+				int x, z, y;
+				x = e.getChunk().getX() * 16 + CSCoreLib.randomizer().nextInt(16);
+				z = e.getChunk().getZ() * 16 + CSCoreLib.randomizer().nextInt(16);
+				boolean flat = false;
+				for (y = e.getWorld().getMaxHeight(); y > 30; y--) {
+					Block current = e.getWorld().getBlockAt(x, y, z);
+					if (!current.getType().isSolid()) {
+						flat = true;
+						for (int i = 0; i < 6; i++) {
+							for (int j = 0; j < 6; j++) {
+								for (int k = 0; k < 8; k++) {
+									if ((current.getRelative(i, k, j).getType().isSolid() || current.getRelative(i, k, j).getType().toString().contains("LEAVES")) || !current.getRelative(i, -1, j).getType().isSolid()) flat = false;
+								}
+							}
+						}
+						if (flat) {
+							RuinBuilder.buildRuin(current.getLocation());
+							break;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onInteract(PlayerInteractEntityEvent e) {
+		if (e.getRightClicked() instanceof Villager && ((LivingEntity) e.getRightClicked()).getCustomName() != null && ((LivingEntity) e.getRightClicked()).getCustomName().equals("§5§lLost Librarian")) {
+			e.setCancelled(true);
+			try {
+				LostLibrarian.openMenu(e.getPlayer());
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+	
+	@EventHandler(priority=EventPriority.LOWEST, ignoreCancelled=true)
+	public void onDamage(EntityDamageEvent e) {
+		
 		if (!(e.getEntity() instanceof LivingEntity)) return;
 		if (!causes.contains(e.getCause())) return;
 		if (!e.getEntity().getWorld().getPVP()) return;
@@ -167,8 +182,24 @@ implements Listener {
 			catch(NumberFormatException x) {
 			}
 		}
+	}
 	
-    }
+	private ItemStack getItemInHand(LivingEntity n) {
+		if (n instanceof Player) return ((Player) n).getItemInHand();
+		else return n.getEquipment().getItemInHand();
+	}
+	
+	private ItemStack[] getArmorContents(LivingEntity n) {
+		if (n instanceof Player) return ((Player) n).getInventory().getArmorContents();
+		else return n.getEquipment().getArmorContents();
+	}
+	
+	@EventHandler(priority=EventPriority.LOWEST)
+	public void onSpawn(CreatureSpawnEvent e) {
+		if (e.getEntityType() == EntityType.ZOMBIE || e.getEntityType() == EntityType.SKELETON || e.getEntityType() == EntityType.PIG_ZOMBIE) {
+			if (CSCoreLib.randomizer().nextInt(100) < main.cfg.getInt("chances.mobs")) ItemManager.equipEntity(e.getEntity());
+		}
+	}
 
     @EventHandler
     public void onItemUse(ItemUseEvent event) {
@@ -265,22 +296,4 @@ implements Listener {
         }
         return similiar;
     }
-	
-	private ItemStack getItemInHand(LivingEntity n) {
-		if (n instanceof Player) return ((Player) n).getItemInHand();
-		else return n.getEquipment().getItemInHand();
-	}
-    
-	private ItemStack[] getArmorContents(LivingEntity n) {
-		if (n instanceof Player) return ((Player) n).getInventory().getArmorContents();
-		else return n.getEquipment().getArmorContents();
-	}
-	
-	@EventHandler(priority=EventPriority.LOWEST)
-	public void onSpawn(CreatureSpawnEvent e) {
-		if (e.getEntityType() == EntityType.ZOMBIE || e.getEntityType() == EntityType.SKELETON || e.getEntityType() == EntityType.PIG_ZOMBIE) {
-			if (CSCoreLib.randomizer().nextInt(100) < main.cfg.getInt("chances.mobs")) ItemManager.equipEntity(e.getEntity());
-		}
-	}
 }
-

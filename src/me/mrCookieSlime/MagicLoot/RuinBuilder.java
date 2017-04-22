@@ -9,18 +9,16 @@ import java.util.Map;
 
 import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
-import me.mrCookieSlime.MagicLoot.Schematic;
-import me.mrCookieSlime.MagicLoot.main;
 
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 public class RuinBuilder {
-
+	
 	public static List<Schematic> schematics = new ArrayList<Schematic>();
 	public static Map<String, Config> configs = new HashMap<String, Config>();
 	public static List<Schematic> buildings = new ArrayList<Schematic>();
-
+	
 	public static void loadRuins() throws IOException {
 		for (File file: new File("plugins/MagicLoot/schematics").listFiles()) {
 			if (file.getName().endsWith(".schematic")) {
@@ -36,7 +34,7 @@ public class RuinBuilder {
 			if (file.getName().endsWith(".schematic")) buildings.add(Schematic.loadSchematic(file));
 		}
 	}
-
+	
 	public static void buildRuin(Location l) {
 		Schematic s = schematics.get(CSCoreLib.randomizer().nextInt(schematics.size()));
 		if (CSCoreLib.randomizer().nextInt(100) < 4) {
@@ -79,43 +77,5 @@ public class RuinBuilder {
 		}
 		return safe;
 	}
-	//	public static void buildRuin(Location l) {
-	//		Schematic s = schematics.get(CSCoreLib.randomizer().nextInt(schematics.size()));
-	//		int length = s.getLenght();
-	//		int width = s.getWidth();
-	//		int x = 0;
-	//		boolean inwater = main.cfg.getBoolean("options.log");//avoid water and lava before paste
-	//		boolean safe = true;
-	//		Block destination = l.getBlock();
-	//		if (!inwater) {
-	//			while (x < width) {
-	//				int y = -1;
-	//				while (y < 2) {
-	//					int z = 0;
-	//					while (z < length) {
-	//						if (destination.getRelative(x, y, z).isLiquid()) {
-	//							safe = false;
-	//							x = width;
-	//							y = 3;
-	//							z = length;
-	//						}
-	//						z++;
-	//					}
-	//					y++;
-	//				}
-	//				x++;
-	//			}
-	//		}
-	//		if (safe) {
-	//			Schematic.pasteSchematic(l, s, true);
-	//		}
-	//		if (main.cfg.getBoolean("options.log")) {
-	//			if (!safe) {
-	//				System.out.println("[ML] Building a ruin was NOT allowed in water/lava");
-	//			} else {
-	//				System.out.println("[ML] Building a ruin generated \"" + s.getName() + "\"");
-	//			}
-	//		}
-	//	}
 }
 
