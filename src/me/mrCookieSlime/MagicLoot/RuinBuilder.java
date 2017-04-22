@@ -11,6 +11,7 @@ import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
 import me.mrCookieSlime.CSCoreLibPlugin.Configuration.Config;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 
 public class RuinBuilder {
 	
@@ -39,16 +40,42 @@ public class RuinBuilder {
 		if (CSCoreLib.randomizer().nextInt(100) < 4) {
 			s = buildings.get(CSCoreLib.randomizer().nextInt(buildings.size()));
 			if (main.cfg.getBoolean("options.log")) System.out.println("Generated \"" + s.getName() + "\"");
-			if (l.getBlock().isLiquid()) return;
+			if (!isSafe(l, s)) return;
 			Schematic.pasteSchematic(l, s, false);
 		}
 		else {
 			if (main.cfg.getBoolean("options.log")) System.out.println("Generated \"" + s.getName() + "\"");
 			Config cfg = configs.get(s.getName());
-			if (l.getBlock().isLiquid() && !cfg.getBoolean("underwater")) return;
+			if (!isSafe(l, s) && !cfg.getBoolean("underwater")) return;
 			l.setY(l.getY() + cfg.getInt("y-offset"));
 			Schematic.pasteSchematic(l, s, true);
 		}
 	}
 
+	public static boolean isSafe(Location l, Schematic s) {
+		int length = s.getLenght();
+		int width = s.getWidth();
+		int x = 0;
+		boolean safe = true;
+		Block destination = l.getBlock();
+		while (x < width) {
+			int y = -2;
+			while (y < 2) {
+				int z = 0;
+				while (z < length) {
+					if (destination.getRelative(x, y, z).isLiquid()) {
+						safe = false;
+						x = width;
+						y = 3;
+						z = length;
+					}
+					z++;
+				}
+				y++;
+			}
+			x++;
+		}
+		return safe;
+	}
 }
+

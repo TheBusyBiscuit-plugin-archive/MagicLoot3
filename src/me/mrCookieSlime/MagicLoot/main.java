@@ -36,6 +36,7 @@ public class main extends JavaPlugin {
 	public static Config config_effects;
 	public static Config cfg;
 	public static Config tiers;
+    public static ItemStack BOOK;
 	
 	public static List<RuinHandler> handlers = new ArrayList<RuinHandler>();
 	
@@ -56,6 +57,7 @@ public class main extends JavaPlugin {
 			config_effects = new Config(new File("plugins/MagicLoot/Effects.yml"));
 			cfg = new Config(new File("plugins/MagicLoot/config.yml"));
 			tiers = new Config(new File("plugins/MagicLoot/loot_tiers.yml"));
+            BOOK = new CustomItem(Material.ENCHANTED_BOOK, "&7Tome of Analizing", 0, new String[]{"", "&eRight Click &7to analize Items"});
 			
 			MagicLoot.setupConfigs();
 			
@@ -69,6 +71,10 @@ public class main extends JavaPlugin {
 			
 			if (Bukkit.getPluginManager().isPluginEnabled("Slimefun")) {
 				Category category = new Category(new MenuItem(Material.BOOKSHELF, "§5MagicLoot", 0, "open"));
+				new SlimefunItem(category, new CustomItem(new MaterialData(Material.ENCHANTED_BOOK), "§dTome of Analizing", "", "§eRight Click §rto analize Items", ""), "TOMB_OF_ANALIZING", RecipeType.MOB_DROP,
+				new ItemStack[] {null, null, null, null, new CustomItem(Material.MONSTER_EGG, "&a&oWitch", 99), null, null, null, null})
+				.register();
+				
 				new SlimefunItem(category, new CustomItem(new MaterialData(Material.BOOKSHELF), "§dLost Bookshelf", "", "§rScrambled Parts of an", "§rancient Library..."), "LOST_BOOKSHELF", RecipeType.ENHANCED_CRAFTING_TABLE,
 				new ItemStack[] {new ItemStack(Material.BOOKSHELF), null, new ItemStack(Material.BOOKSHELF), SlimefunItems.MAGIC_LUMP_3, SlimefunItems.MAGICAL_BOOK_COVER, SlimefunItems.MAGIC_LUMP_3, new ItemStack(Material.BOOKSHELF), null, new ItemStack(Material.BOOKSHELF)}, new CustomItem(new CustomItem(new MaterialData(Material.BOOKSHELF), "§dLost Bookshelf", "", "§rScrambled Parts of an", "§rancient Library..."), 2))
 				.register();
@@ -121,6 +127,7 @@ public class main extends JavaPlugin {
 		config_names = null;
 		config_potions = null;
 		handlers = null;
+        BOOK = null;
 		
 		ItemManager.COLOR = null;
 		ItemManager.ENCHANTMENTS = null;

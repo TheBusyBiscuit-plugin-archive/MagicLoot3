@@ -68,6 +68,16 @@ public class ItemManager {
 			switch(type) {
 			case BOOK: {
 				item.setType(Material.ENCHANTED_BOOK);
+				String name = String.valueOf(COLOR.get(CSCoreLib.randomizer().nextInt(COLOR.size()))) + PREFIX.get(CSCoreLib.randomizer().nextInt(PREFIX.size())) + " " + SUFFIX.get(CSCoreLib.randomizer().nextInt(SUFFIX.size()));
+				EnchantmentStorageMeta meta = (EnchantmentStorageMeta)item.getItemMeta();
+				meta.setDisplayName(ChatColor.translateAlternateColorCodes((char)'&', (String)name));
+				int i = 0;
+				while (i < CSCoreLib.randomizer().nextInt(max_enchantments - min_enchantments) + min_enchantments) {
+					Enchantment e = ENCHANTMENTS.get(CSCoreLib.randomizer().nextInt(ENCHANTMENTS.size()));
+					meta.addStoredEnchant(e, CSCoreLib.randomizer().nextInt(MagicLoot.getMaxLevel(e) - 1) + 1, true);
+					++i;
+				}
+				item.setItemMeta((ItemMeta)meta);
 				item = applyTier(item, LootTier.getRandom());
 				break;
 			}
@@ -104,16 +114,21 @@ public class ItemManager {
 			case SLIMEFUN: {
 				item = SLIMEFUN.get(CSCoreLib.randomizer().nextInt(SLIMEFUN.size())).clone();
 				item.setAmount(CSCoreLib.randomizer().nextInt(max_slimefun - min_slimefun) + min_slimefun);
-				if (!item.getType().equals(Material.SKULL_ITEM) && item.getType().getMaxStackSize() < item.getAmount()) item.setAmount(item.getType().getMaxStackSize());
+				if (item.getType().getMaxStackSize() >= item.getAmount()) break;
+				item.setAmount(item.getType().getMaxStackSize());
 				break;
 			}
 			case UNANALIZED: {
+				if (CSCoreLib.randomizer().nextInt(100) < 10) {
+					item = main.BOOK;
+					break;
+				}
 				item.setType(TOOLS.get(CSCoreLib.randomizer().nextInt(TOOLS.size())));
 				ItemMeta im = item.getItemMeta();
 				im.setDisplayName(ChatColor.translateAlternateColorCodes('&', "&7&kMEH WANNA BE EXAMINED"));
 				List<String> lore = new ArrayList<String>();
 				lore.add("");
-				lore.add("§8Tier: §b§d§e§cUnknown");
+				lore.add(ChatColor.translateAlternateColorCodes((char)'&', (String)"&7&oUnanalized"));
 				im.setLore(lore);
 				item.setItemMeta(im);
 				if (item.getType().getMaxDurability() > 0) item.setDurability((short) (CSCoreLib.randomizer().nextInt(item.getType().getMaxDurability() / 4) * 3));

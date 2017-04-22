@@ -1,12 +1,18 @@
 package me.mrCookieSlime.MagicLoot;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import me.mrCookieSlime.CSCoreLibPlugin.CSCoreLib;
+import me.mrCookieSlime.CSCoreLibPlugin.events.ItemUseEvent;
+import me.mrCookieSlime.CSCoreLibPlugin.general.Particles.FireworkShow;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.block.Block;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -22,6 +28,8 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.world.ChunkPopulateEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.potion.PotionEffect;
 
 public class MLListener implements Listener {
@@ -192,4 +200,100 @@ public class MLListener implements Listener {
 			if (CSCoreLib.randomizer().nextInt(100) < main.cfg.getInt("chances.mobs")) ItemManager.equipEntity(e.getEntity());
 		}
 	}
+
+    @EventHandler
+    public void onItemUse(ItemUseEvent event) {
+        Player p = event.getPlayer();
+        if (event.getItem() != null && this.isItemSimiliar(event.getItem(), main.BOOK, true)) {
+            ArrayList<Integer> convert = new ArrayList<Integer>();
+            int i = 0;
+            while (i < p.getInventory().getContents().length) {
+                if (p.getInventory().getContents()[i] != null && p.getInventory().getContents()[i].hasItemMeta() && p.getInventory().getContents()[i].getItemMeta().hasLore() && p.getInventory().getContents()[i].getItemMeta().getLore().size() == 2 && ((String)p.getInventory().getContents()[i].getItemMeta().getLore().get(1)).equalsIgnoreCase(ChatColor.translateAlternateColorCodes((char)'&', (String)"&7&oUnanalized"))) {
+                    convert.add(i);
+                }
+                ++i;
+            }
+            if (!convert.isEmpty()) {
+                int min2 = main.cfg.getInt("enchantments.min");
+                int max2 = main.cfg.getInt("enchantments.max");
+                int min4 = main.cfg.getInt("effects.min");
+                int max4 = main.cfg.getInt("effects.max");
+                Iterator<Integer> iterator = convert.iterator();
+                while (iterator.hasNext()) {
+                    int c = (Integer)iterator.next();
+                    ItemStack item = p.getInventory().getContents()[c];
+                    String name = String.valueOf(ItemManager.COLOR.get(CSCoreLib.randomizer().nextInt(ItemManager.COLOR.size()))) + ItemManager.PREFIX.get(CSCoreLib.randomizer().nextInt(ItemManager.PREFIX.size())) + " " + ItemManager.SUFFIX.get(CSCoreLib.randomizer().nextInt(ItemManager.SUFFIX.size()));
+                    ItemMeta im = item.getItemMeta();
+                    im.setDisplayName(ChatColor.translateAlternateColorCodes((char)'&', (String)name));
+                    ArrayList<String> lore = new ArrayList<String>();
+                    int i2 = 0;
+                    while (i2 < CSCoreLib.randomizer().nextInt(max4 - min4) + min4) {
+                        String e = ItemManager.EFFECTS.get(CSCoreLib.randomizer().nextInt(ItemManager.EFFECTS.size()));
+                        String apply = CSCoreLib.randomizer().nextInt(100) > 50 ? "+" : "-";
+                        int level = MagicLoot.getMaxLevel(e) > 1 ? CSCoreLib.randomizer().nextInt(MagicLoot.getMaxLevel(e) - 1) + 1 : 1;
+                        lore.add(ChatColor.translateAlternateColorCodes((char)'&', (String)(String.valueOf(ItemManager.COLOR.get(CSCoreLib.randomizer().nextInt(ItemManager.COLOR.size()))) + apply + " " + e + " " + level)));
+                        ++i2;
+                    }
+                    im.setLore(lore);
+                    if (im instanceof LeatherArmorMeta) {
+                        ((LeatherArmorMeta)im).setColor(Color.fromRGB((int)CSCoreLib.randomizer().nextInt(255), (int)CSCoreLib.randomizer().nextInt(255), (int)CSCoreLib.randomizer().nextInt(255)));
+                    }
+                    item.setItemMeta(im);
+                    i2 = 0;
+                    while (i2 < CSCoreLib.randomizer().nextInt(max2 - min2) + min2) {
+                    	Enchantment en = ItemManager.ENCHANTMENTS.get(CSCoreLib.randomizer().nextInt(ItemManager.ENCHANTMENTS.size()));
+                        item.addUnsafeEnchantment((Enchantment)en, CSCoreLib.randomizer().nextInt(MagicLoot.getMaxLevel((Enchantment)en) - 1) + 1);
+                        ++i2;
+                    }
+                    if (item.getType().getMaxDurability() > 0) item.setDurability((short)(CSCoreLib.randomizer().nextInt(item.getType().getMaxDurability() / 4) * 3));
+                    p.getInventory().setItem(c, item);
+                }
+                me.mrCookieSlime.CSCoreLibPlugin.general.Player.PlayerInventory.consumeItemInHand((Player)p);
+                me.mrCookieSlime.CSCoreLibPlugin.general.Player.PlayerInventory.update((Player)p);
+                p.sendMessage(ChatColor.translateAlternateColorCodes((char)'&', (String)("&7You have just analized &e&o" + convert.size() + " &7Items")));
+                FireworkShow.launchRandom((Player)p, (int)2);
+            }
+        }
+    }
+
+    public boolean isItemSimiliar(ItemStack item, ItemStack SFitem, boolean lore) {
+        boolean similiar = false;
+        if (item != null && SFitem != null && item.getType() == SFitem.getType() && item.getAmount() >= SFitem.getAmount()) {
+            if (item.hasItemMeta() && SFitem.hasItemMeta()) {
+                if (item.getItemMeta().hasDisplayName() && SFitem.getItemMeta().hasDisplayName()) {
+                    if (item.getItemMeta().getDisplayName().equalsIgnoreCase(SFitem.getItemMeta().getDisplayName())) {
+                        if (lore) {
+                            if (item.getItemMeta().hasLore() && SFitem.getItemMeta().hasLore()) {
+                                if (item.getItemMeta().getLore().toString().equalsIgnoreCase(SFitem.getItemMeta().getLore().toString())) {
+                                    similiar = true;
+                                }
+                            } else if (!item.getItemMeta().hasLore() && !SFitem.getItemMeta().hasLore()) {
+                                similiar = true;
+                            }
+                        } else {
+                            similiar = true;
+                        }
+                    }
+                } else if (!item.getItemMeta().hasDisplayName() && !SFitem.getItemMeta().hasDisplayName()) {
+                    if (lore) {
+                        if (item.getItemMeta().hasLore() && SFitem.getItemMeta().hasLore()) {
+                            if (item.getItemMeta().getLore().toString().equalsIgnoreCase(SFitem.getItemMeta().getLore().toString())) {
+                                similiar = true;
+                            }
+                        } else if (!item.getItemMeta().hasLore() && !SFitem.getItemMeta().hasLore()) {
+                            similiar = true;
+                        }
+                    } else {
+                        similiar = true;
+                    }
+                }
+            } else if (!item.hasItemMeta() && !SFitem.hasItemMeta()) {
+                similiar = true;
+            }
+        }
+        if (item == null && SFitem == null) {
+            similiar = true;
+        }
+        return similiar;
+    }
 }
